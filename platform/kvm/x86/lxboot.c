@@ -11,7 +11,7 @@
 struct lxboot_params boot_params __aligned(16);
 
 struct lxboot_setup_header hdr __section(".data.lxboot.header") = {
-	.setup_sects = 1,
+	.setup_sects = 4,
 	.root_flags = ROOT_RDONLY,		/* deprecated */
 	.syssize = 0,					/* deperecated */
 	.ram_size = 0,					/* obsolute */
@@ -41,7 +41,7 @@ struct lxboot_setup_header hdr __section(".data.lxboot.header") = {
 	.relocatable_kernel = 0,
 	.min_alignment = 0,
 	.xloadflags = XLF_KERNEL_64,
-	.cmd_line_size = 0,
+	.cmd_line_size = 1024,
 	.hardware_subarch = 0,
 	.hardware_subarch_data = 0,
 	.payload_offset = 0,

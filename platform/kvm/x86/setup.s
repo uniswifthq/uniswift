@@ -87,7 +87,7 @@ setup:                                  # @setup
 	.cfi_offset ebp, -8
 	mov	ebp, esp
 	.cfi_def_cfa_register ebp
-	push	eax
+	sub	esp, 12
 	call	copy_boot_params
 	movzx	eax, word ptr [boot_params+502]
 	and	eax, 65280
@@ -114,6 +114,37 @@ setup:                                  # @setup
 
 
 	#NO_APP
+	xor	eax, eax
+	mov	dword ptr [esp], 1017
+	mov	dword ptr [esp + 4], 0
+	call	outb
+	mov	dword ptr [esp], 1019
+	mov	dword ptr [esp + 4], 128
+	call	outb
+	mov	dword ptr [esp], 1016
+	mov	dword ptr [esp + 4], 3
+	call	outb
+	xor	eax, eax
+	mov	dword ptr [esp], 1017
+	mov	dword ptr [esp + 4], 0
+	call	outb
+	mov	dword ptr [esp], 1019
+	mov	dword ptr [esp + 4], 3
+	call	outb
+	mov	dword ptr [esp], 1018
+	mov	dword ptr [esp + 4], 199
+	call	outb
+	mov	dword ptr [esp], 1016
+	mov	dword ptr [esp + 4], 86
+	call	outb
+	#APP
+
+	mov	ah, 14
+	mov	al, 90
+	int	16
+
+
+	#NO_APP
 	#APP
 
 	mov	ah, 14
@@ -122,7 +153,7 @@ setup:                                  # @setup
 
 
 	#NO_APP
-	add	esp, 4
+	add	esp, 12
 	pop	ebp
 	.cfi_def_cfa esp, 4
 	ret
@@ -130,10 +161,38 @@ setup:                                  # @setup
 	.size	setup, .Lfunc_end2-setup
 	.cfi_endproc
                                         # -- End function
+	.p2align	4, 0x90                         # -- Begin function outb
+	.type	outb,@function
+outb:                                   # @outb
+	.cfi_startproc
+# %bb.0:
+	push	ebp
+	.cfi_def_cfa_offset 8
+	.cfi_offset ebp, -8
+	mov	ebp, esp
+	.cfi_def_cfa_register ebp
+	mov	al, byte ptr [ebp + 12]
+	mov	ax, word ptr [ebp + 8]
+	mov	dx, word ptr [ebp + 8]
+	mov	al, byte ptr [ebp + 12]
+	#APP
+
+	out	dx, al
+
+
+	#NO_APP
+	pop	ebp
+	.cfi_def_cfa esp, 4
+	ret
+.Lfunc_end3:
+	.size	outb, .Lfunc_end3-outb
+	.cfi_endproc
+                                        # -- End function
 	.ident	"Homebrew clang version 17.0.6"
 	.section	".note.GNU-stack","",@progbits
 	.addrsig
 	.addrsig_sym copy_boot_params
 	.addrsig_sym memcpy
+	.addrsig_sym outb
 	.addrsig_sym boot_params
 	.addrsig_sym hdr

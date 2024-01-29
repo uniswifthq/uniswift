@@ -64,8 +64,7 @@ reboot:
 	sub cx, di
 	shr cx, 2
 	xor eax, eax
-	rep
-	stosw
+	rep stosw
 
 	call setup
 	

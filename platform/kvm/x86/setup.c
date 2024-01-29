@@ -5,36 +5,19 @@
  */
 
 #include <usft/essentials.h>
-
 #include <usft/nolibc/string.h>
-
+#include <common/x86/serial.h>
 #include <kvm/lxboot.h>
 
 void copy_boot_params() {
-    memcpy(&boot_params.hdr, &hdr, sizeof(struct lxboot_setup_header));
+	memcpy(&boot_params.hdr, &hdr, sizeof(struct lxboot_setup_header));
 }
 
 void setup() {
 
-    copy_boot_params();
+	copy_boot_params();
 
-    char a = (char)((boot_params.hdr.boot_flag & 0xFF00) >> 8) - 0x87;
-    asm(
-        "mov ah, 0x0E;"
-        "mov al, %0;"
-        "int 0x10;"
-        :
-        : "r" (a)
-    );
-    asm(
-        "mov ah, 0x0E;"
-        "mov al, 'H';"
-        "int 0x10;"
-    );
-    asm(
-        "mov ah, 0x0E;"
-        "mov al, 'H';"
-        "int 0x10;"
-    );
-   return;
+	serial_init();
+
+	return;
 }
