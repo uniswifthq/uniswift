@@ -6,12 +6,29 @@
 
 #include <common/x86/serial.h>
 
-void serial_init() {
-    #define PORT 0x3f8          // COM1
+#include <common/x86/asm.h>
 
-	outb(PORT + 1, 0x00);
-	outb(PORT + 3, 0x80);
-	outb(PORT + 0, 0x03);
-	outb(PORT + 1, 0x00);
-	outb(PORT + 3, 0x03);
+#define COM1 0x3f8
+
+#define COM1_DATA (COM1 + 0)
+#define COM1_INTR (COM1 + 1)
+#define COM1_CTRL (COM1 + 3)
+#define COM1_STATUS (COM1 + 5)
+
+/* DLAB == 1 */
+#define COM1_DIV_LO (COM1 + 0)
+#define COM1_DIV_HI (COM1 + 1)
+
+#define DLAB 0x80
+#define PROT 0x03 /* 8 bits, no parity, one stop bit */
+
+void serial_init() {
+	outb(COM1 + 1, 0x00); /* disable all interrupts */
+	outb(COM1 + 3, DLAB); /* enable DLAB (set baud rate divisor) */
+
+    /* set divisor to 3 */
+	outb(COM1 + 0, 0x01); /* low */
+	outb(COM1 + 1, 0x00); /* high */
+
+	outb(COM1 + 3, PROT);
 }
