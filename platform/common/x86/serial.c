@@ -10,7 +10,6 @@
 
 #define COM1 0x3f8
 
-#define COM1_DATA (COM1 + 0)
 #define COM1_INTR (COM1 + 1)
 #define COM1_CTRL (COM1 + 3)
 #define COM1_STATUS (COM1 + 5)
@@ -31,4 +30,18 @@ void serial_init() {
 	outb(COM1_DIV_HI, 0x00); /* high */
 
 	outb(COM1_CTRL, PROT);
+}
+
+static int serial_tx_empty() {
+	return inb(COM1_STATUS) & 0x20;
+}
+
+static void serial_write(char i) {
+	while (!serial_tx_empty());
+
+	outb(COM1, i);
+}
+
+static int serial_rx_ready(void) {
+	return inb(COM1_STATUS) & 0x01;
 }
