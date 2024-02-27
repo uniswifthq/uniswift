@@ -9,4 +9,7 @@
 
 void serial_init();
 
+void serial_putc(char i);
+int serial_getc();
+
 #endif /* __SERIAL_H__ */
