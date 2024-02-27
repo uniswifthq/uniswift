@@ -42,18 +42,22 @@ static void serial_write(char i) {
 	outb(COM1, i);
 }
 
-static int serial_rx_ready(void) {
-	return inb(COM1_STATUS) & 0x01;
-}
-
 void serial_putc(char i) {
 	if (i == '\n') 
 		serial_write('\r');
 	serial_write(i);
 }
 
-int serial_getc() {
-	if (!serial_rx_ready()) 
-		return -1;
+static int serial_rx_ready(void) {
+	return inb(COM1_STATUS) & 0x01;
+}
+
+static int serial_read() {
+	while (!serial_rx_ready());
+
 	return inb(COM1);
+}
+
+int serial_getc() {
+	return serial_read();
 }
