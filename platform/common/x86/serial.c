@@ -10,8 +10,8 @@
 
 #define COM1 0x3f8
 
-#define COM1_INTR (COM1 + 1)
-#define COM1_CTRL (COM1 + 3)
+#define COM1_INTR   (COM1 + 1)
+#define COM1_CTRL   (COM1 + 3)
 #define COM1_STATUS (COM1 + 5)
 
 /* DLAB == 1 */
@@ -25,7 +25,7 @@ void serial_init() {
 	outb(COM1_INTR, 0x00); /* disable all interrupts */
 	outb(COM1_CTRL, DLAB); /* enable DLAB (set baud rate divisor) */
 
-    /* set divisor to 3 */
+	/* set divisor to 3 */
 	outb(COM1_DIV_LO, 0x01); /* low */
 	outb(COM1_DIV_HI, 0x00); /* high */
 
@@ -52,6 +52,7 @@ static int serial_rx_ready(void) {
 	return inb(COM1_STATUS) & 0x01;
 }
 
+<<<<<<< Updated upstream
 static int serial_read() {
 	while (!serial_rx_ready());
 
@@ -60,4 +61,14 @@ static int serial_read() {
 
 int serial_getc() {
 	return serial_read();
+=======
+void serial_putc(char i) {
+	if (i == '\n') serial_write('\r');
+	serial_write(i);
+}
+
+int serial_getc() {
+	if (!serial_rx_ready()) return -1;
+	return (int) inb(COM1);
+>>>>>>> Stashed changes
 }

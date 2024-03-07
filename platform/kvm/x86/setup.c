@@ -19,5 +19,4 @@ void setup() {
 
 	serial_init();
 
-	return;
 }

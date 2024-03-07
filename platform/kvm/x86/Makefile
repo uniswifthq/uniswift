@@ -1,4 +1,4 @@
-head.bin: head.ld head.S lxboot.c setup.c
+head.bin: head.ld head.S lxboot.c setup.c ../../common/x86/serial.c
 	clang -I../include -I../../../include -masm=intel --target=i386-elf -D__ASSEMBLY__ -c head.S
 	clang -I../include -I../../../include -masm=intel --target=i386-elf -c lxboot.c
 	clang -I../include -I../../../include -I../../common/include -masm=intel --target=i386-elf -m16 -c setup.c
