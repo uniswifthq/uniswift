@@ -52,7 +52,6 @@ static int serial_rx_ready(void) {
 	return inb(COM1_STATUS) & 0x01;
 }
 
-<<<<<<< Updated upstream
 static int serial_read() {
 	while (!serial_rx_ready());
 
@@ -61,14 +60,4 @@ static int serial_read() {
 
 int serial_getc() {
 	return serial_read();
-=======
-void serial_putc(char i) {
-	if (i == '\n') serial_write('\r');
-	serial_write(i);
-}
-
-int serial_getc() {
-	if (!serial_rx_ready()) return -1;
-	return (int) inb(COM1);
->>>>>>> Stashed changes
 }
